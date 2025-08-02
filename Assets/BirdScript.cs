@@ -6,6 +6,13 @@ public class BirdScript : MonoBehaviour
     public Rigidbody2D myRigidbody;
     public float flapForce = 7;
     public LogicScript logic;
+    public bool birdIsAlive = true;
+    AudioManagerScript audioManager;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManagerScript>();
+    }
 
     void Start()
     {
@@ -14,7 +21,7 @@ public class BirdScript : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && birdIsAlive)
         {
             myRigidbody.linearVelocity = Vector2.up * flapForce;
         }
@@ -23,5 +30,8 @@ public class BirdScript : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         logic.gameOver();
+        birdIsAlive = false;
+        audioManager.PlaySFX(audioManager.hit_pipe);
+
     }
 }

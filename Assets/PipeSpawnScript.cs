@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 public class PipeSpawnScript : MonoBehaviour
 {
     public GameObject Pipe;
-    public float spawnRate = 3;
+    public float spawnRate = 2;
     private float timer = 0;
     public float heightOffset = 3;
 
