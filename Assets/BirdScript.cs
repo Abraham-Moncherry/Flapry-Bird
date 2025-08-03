@@ -7,6 +7,10 @@ public class BirdScript : MonoBehaviour
     public float flapForce = 7;
     public LogicScript logic;
     public bool birdIsAlive = true;
+
+    private float gameScreenTopY = 6;
+
+    private float gameScreenBottomY = -6;
     AudioManagerScript audioManager;
 
     private void Awake()
@@ -21,9 +25,31 @@ public class BirdScript : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.spaceKey.wasPressedThisFrame && birdIsAlive)
+        // Check for keyboard input (Space key)
+        bool shouldFlap = Keyboard.current.spaceKey.wasPressedThisFrame;
+
+        // Check for touch input (iPad/mobile)
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
+        {
+            shouldFlap = true;
+        }
+
+        // Check for mouse click (for testing on computer)
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            shouldFlap = true;
+        }
+
+        if (shouldFlap && birdIsAlive)
         {
             myRigidbody.linearVelocity = Vector2.up * flapForce;
+        }
+
+        if ((transform.position.y > gameScreenTopY || transform.position.y < gameScreenBottomY) && birdIsAlive)
+        {
+            logic.gameOver();
+            birdIsAlive = false;
+            audioManager.PlaySFX(audioManager.hit_pipe);
         }
     }
 
